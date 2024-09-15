@@ -15,6 +15,7 @@ from homeassistant.const import (
     CONF_NAME,
     Platform,
 )
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api import VAScraperClient
 from .const import (
@@ -58,6 +59,7 @@ async def async_setup_entry(
         month=entry.options[CONF_MONTH],
         year=entry.options[CONF_YEAR],
         days=entry.options[CONF_DAYS],
+        session=async_get_clientsession(hass),
     )
     # https://developers.home-assistant.io/docs/integration_fetching_data#coordinated-single-api-poll-for-data-for-all-entities
     coordinator = VAScraperDataUpdateCoordinator(api, hass)

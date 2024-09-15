@@ -56,6 +56,26 @@ class VAScraperDataUpdateCoordinator(DataUpdateCoordinator):
         LOGGER.debug("got scraper lock!")
 
         try:
+            await self._async_scrape()
+        except Exception as error:
+            self.lock.release()
+            raise UpdateFailed(error) from error
+
+        self.lock.release()
+        async_dispatcher_send(self.hass, "update_sensors", self)
+        return self.data
+
+    async def _async_update_data_old(self) -> Any:
+        """Update data via library."""
+        LOGGER.debug("wait for scraper lock...")
+        try:
+            await asyncio_wait_for(self.lock.acquire(), timeout=10)
+        except Exception:  # noqa: BLE001
+            LOGGER.error("timed out waiting for scraper lock")
+            return None
+        LOGGER.debug("got scraper lock!")
+
+        try:
             LOGGER.debug("_async_update_data - calling async_add_executor_job")
             await self.hass.async_add_executor_job(self.scrape)
         except Exception as error:
@@ -65,6 +85,9 @@ class VAScraperDataUpdateCoordinator(DataUpdateCoordinator):
         self.lock.release()
         async_dispatcher_send(self.hass, "update_sensors", self)
         return self.data
+
+    async def _async_scrape(self) -> None:
+        self.data = await self._scrape_client.async_va_scraper("test")
 
     def scrape(self) -> None:
         """Invoke the scrape method."""
