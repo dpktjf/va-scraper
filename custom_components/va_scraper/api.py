@@ -6,21 +6,8 @@ import logging
 from threading import Lock
 from typing import TYPE_CHECKING, Any
 
-from homeassistant.const import STATE_UNKNOWN
-
-from custom_components.va_scraper.const import (
-    ATTR_ETO,
-    ATTR_RAIN,
-    ATTR_RAW_RUNTIME,
-    CALC_RUNTIME,
-    CONF_MAX_MINS,
-    CONF_SCALE,
-    CONF_THROUGHPUT_MM_H,
-)
-
 if TYPE_CHECKING:
     import aiohttp
-    from homeassistant.core import StateMachine
 
 _LOGGER = logging.getLogger(__name__)
 

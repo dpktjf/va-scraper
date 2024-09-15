@@ -5,7 +5,7 @@ default_config:
 homeassistant:
   debug: true
 
-template: !include templates.yaml
+#template: !include templates.yaml
 
 # https://www.home-assistant.io/integrations/logger/
 logger:

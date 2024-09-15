@@ -1,52 +1,26 @@
 {
-    "title": "ETO Smart Zone Calculator",
+    "title": "VA Scraper",
     "config": {
         "step": {
             "user": {
-                "title": "",
-                "description": "Create a sensor that calculates runtime for a watering zone, given calculated ETo and associated zone calibration data.",
+                "title": "VA Scraper",
+                "description": "Create a sensor that scrapes award seat availability for a given route and month.",
                 "data": {
-                    "name": "Smart watering zone name",
-                    "eto_entity_id": "ETO entity",
-                    "rain_entity_id": "Input rain entity",
-                    "throughput_mm_h": "Water throughput",
-                    "scale": "Scale factor",
-                    "max_mins": "Maximum runtime"
+                    "name": "Scraper name",
+                    "origin": "Departure airport",
+                    "destination": "Arrival airport",
+                    "month": "Month of travel",
+                    "year": "Year of travel",
+                    "days_to_scrape": "Flying days to scrape availability"
                 },
                 "data_description": {
-                    "eto_entity_id": "Name of the entity holding the calculated ETo value.",
-                    "rain_entity_id": "Name of the entity holding the accumulated rainfall over last 24h.",
-                    "throughput_mm_h": "Volume of water in mm/h that the zone can output.",
-                    "scale": "Percentage by which to scale the raw runtime calculations for the zone.",
-                    "max_mins": "Maximum runtime for the zone in minutes."
+                    "origin": "Airport of departure.",
+                    "destination": "Airport of arrival.",
+                    "month": "Month of travel.",
+                    "year": "Year of travel.",
+                    "days_to_scrape": "Flying days - if multiple then separate by semi-colon."
                 }
             }
-        }
-    },
-    "options": {
-        "step": {
-            "init": {
-                "data": {
-                    "eto_entity_id": "ETO entity",
-                    "rain_entity_id": "Input rain entity",
-                    "throughput_mm_h": "Water throughput",
-                    "scale": "Scale factor",
-                    "max_mins": "Maximum runtime"
-                },
-                "data_description": {
-                    "eto_entity_id": "Name of the entity holding the calculated ETo value.",
-                    "rain_entity_id": "Name of the entity holding the accumulated rainfall over last 24h.",
-                    "throughput_mm_h": "Volume of water in mm/h that the zone can output.",
-                    "scale": "Percentage by which to scale the raw runtime calculations for the zone.",
-                    "max_mins": "Maximum runtime for the zone in minutes."
-                }
-            }
-        }
-    },
-    "services": {
-        "reload": {
-            "name": "[%key:common::action::reload%]",
-            "description": "Reloads ETO Zone Calculator sensors from the YAML-configuration."
         }
     }
 }

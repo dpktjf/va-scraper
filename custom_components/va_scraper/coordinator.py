@@ -34,7 +34,7 @@ class VAScraperDataUpdateCoordinator(DataUpdateCoordinator):
     ) -> None:
         """Initialize."""
         self.hass = hass
-        self._client = client
+        self._scrape_client = client
         self.data = {}
         self.lock = Asyncio_lock()
 
@@ -66,12 +66,11 @@ class VAScraperDataUpdateCoordinator(DataUpdateCoordinator):
         async_dispatcher_send(self.hass, "update_sensors", self)
         return self.data
 
-
     def scrape(self) -> None:
         """Invoke the scrape method."""
-        self.data = self._client.va_scraper()
+        self.data = self._scrape_client.va_scraper()
 
     @property
-    def _client(self) -> VAScraperClient:
+    def scrape_client(self) -> VAScraperClient:
         """Getter."""
-        return self._client
+        return self._scrape_client
