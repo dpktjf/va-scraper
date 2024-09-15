@@ -6,9 +6,6 @@ import logging
 from typing import Any
 
 import voluptuous as vol
-from homeassistant.components.sensor.const import (
-    DOMAIN as SENSOR_DOMAIN,
-)
 from homeassistant.config_entries import (
     ConfigEntry,
     ConfigFlow,
@@ -21,7 +18,6 @@ from homeassistant.const import (
     CONF_NAME,
 )
 from homeassistant.core import callback
-from homeassistant.helpers import selector
 
 from .const import (
     CONF_DAYS,

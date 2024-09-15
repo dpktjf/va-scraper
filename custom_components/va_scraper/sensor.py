@@ -9,15 +9,12 @@ from homeassistant.components.sensor import (
     SensorEntity,
     SensorEntityDescription,
 )
-from homeassistant.components.sensor.const import SensorDeviceClass, SensorStateClass
 from homeassistant.const import (
     STATE_UNAVAILABLE,
-    UnitOfTime,
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 
-from custom_components.va_scraper.api import VAScraperError
 from custom_components.va_scraper.const import (
     ATTR_ECONOMY,
     ATTR_PREMIUM,

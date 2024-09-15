@@ -15,7 +15,6 @@ from homeassistant.const import (
     CONF_NAME,
     Platform,
 )
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api import VAScraperClient
 from .const import (
