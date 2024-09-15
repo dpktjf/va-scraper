@@ -88,6 +88,7 @@ class VAScraperDataUpdateCoordinator(DataUpdateCoordinator):
 
     async def _async_scrape(self) -> None:
         self.data = await self._scrape_client.async_va_scraper("test")
+        LOGGER.debug("data=%s", self.data)
 
     def scrape(self) -> None:
         """Invoke the scrape method."""

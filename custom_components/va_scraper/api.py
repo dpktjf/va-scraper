@@ -93,9 +93,11 @@ class VAScraperClient:
     async def async_va_scraper(self, value: str) -> Any:
         """Get data from the API."""
         _LOGGER.debug("value=%s", value)
+        uri = f"origin={self._origin}&destination={self._destination}&month={self._month}&year={self._year}&watch={self._days}"  # noqa: E501
+        _LOGGER.debug("uri=%s", uri)
         return await self._api_wrapper(
             method="get",
-            url="http://jupiter:1880/scrape?out=LHR&ret=MLE",
+            url=f"http://jupiter:1880/scraper?{uri}",
             headers={"Content-type": "application/json; charset=UTF-8"},
         )
 
