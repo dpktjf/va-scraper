@@ -1,7 +1,7 @@
 {
-    "name": "ETO Smart Zone Calculator",
+    "name": "VA Reward Scraper",
     "country": "ALL",
     "hide_default_branch": true,
-    "homeassistant": "2024.8.0",
+    "homeassistant": "2024.9.1",
     "render_readme": true
 }
