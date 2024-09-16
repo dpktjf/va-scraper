@@ -16,7 +16,7 @@
                 "data_description": {
                     "origin": "Airport of departure.",
                     "destination": "Airport of arrival.",
-                    "month": "Month of travel.",
+                    "month": "Month of travel - 0 padded (01, 02...).",
                     "year": "Year of travel.",
                     "days_to_scrape": "Flying days - if multiple then separate by semi-colon."
                 }
