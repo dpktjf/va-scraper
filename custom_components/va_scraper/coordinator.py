@@ -4,13 +4,12 @@ from __future__ import annotations
 
 from asyncio import Lock as Asyncio_lock
 from asyncio import wait_for as asyncio_wait_for
-from datetime import timedelta
 from typing import TYPE_CHECKING, Any
 
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import DOMAIN, LOGGER
+from .const import DOMAIN, LOGGER, UPDATE_INTERVAL
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
@@ -21,7 +20,6 @@ if TYPE_CHECKING:
     from .data import VAScraperConfigEntry
 
 
-# https://developers.home-assistant.io/docs/integration_fetching_data#coordinated-single-api-poll-for-data-for-all-entities
 class VAScraperDataUpdateCoordinator(DataUpdateCoordinator):
     """Class to manage fetching data from the API."""
 
@@ -42,7 +40,7 @@ class VAScraperDataUpdateCoordinator(DataUpdateCoordinator):
             hass=hass,
             logger=LOGGER,
             name=DOMAIN,
-            update_interval=timedelta(minutes=10),
+            update_interval=UPDATE_INTERVAL,
         )
 
     async def _async_update_data(self) -> Any:
