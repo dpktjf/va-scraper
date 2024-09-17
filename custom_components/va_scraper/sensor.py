@@ -16,8 +16,11 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 
 from custom_components.va_scraper.const import (
+    ATTR_CODE,
     ATTR_ECONOMY,
+    ATTR_MSG,
     ATTR_PREMIUM,
+    ATTR_STATUS,
     ATTR_UPPER,
     ATTRIBUTION,
     DEFAULT_NAME,
@@ -135,3 +138,18 @@ class VAScraperSensor(SensorEntity):
         ):
             return STATE_UNAVAILABLE
         return self._coordinator.data.get(self._dd).get(self.entity_description.key)  # type: ignore  # noqa: PGH003
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Return the device specific state attributes."""
+        attributes: dict[str, Any] = {}
+        if (self._coordinator.data.get(ATTR_STATUS)) is None:
+            attributes[ATTR_CODE] = 1
+            attributes[ATTR_MSG] = "Cannot connect to node-red service???"
+        else:
+            attributes[ATTR_CODE] = self._coordinator.data.get(ATTR_STATUS).get(  # type: ignore  # noqa: PGH003
+                ATTR_CODE
+            )
+            attributes[ATTR_MSG] = self._coordinator.data.get(ATTR_STATUS).get(ATTR_MSG)  # type: ignore  # noqa: PGH003
+
+        return attributes
