@@ -2,13 +2,22 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import socket
+from http import HTTPStatus
 from threading import Lock
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import aiohttp
 import async_timeout
+from homeassistant.core import callback
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
+
+from .const import BASE, INITIAL_REQUEST_HEADERS, REQUEST_HEADERS, WEBSESSION_TIMEOUT
+
+if TYPE_CHECKING:
+    from homeassistant.core import HomeAssistant
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -68,10 +77,10 @@ class VAScraperClient:
         month: str,
         year: str,
         days: str,
-        session: aiohttp.ClientSession,
+        hass: HomeAssistant,
     ) -> None:
         """Sample API Client."""
-        self._session = session
+        self.websession = async_get_clientsession(hass)
         self._name = name
         self._origin = origin
         self._destination = destination
@@ -111,7 +120,7 @@ class VAScraperClient:
         """Get information from the API."""
         try:
             async with async_timeout.timeout(10):
-                response = await self._session.request(
+                response = await self.websession.request(
                     method=method,
                     url=url,
                     headers=headers,
@@ -135,3 +144,33 @@ class VAScraperClient:
             raise VAScraperBadRequestError(
                 msg,
             ) from exception
+
+    async def build_request_url(self) -> str:
+        """Build the request url."""
+        return f"{BASE}?origin={self._origin}&destination={self._destination}&airline=VS&month={self._month}&year={self._year}"  # noqa: E501
+
+    async def get_json(self) -> dict | None:
+        """Get the JSON data."""
+        url = await self.build_request_url()
+        _LOGGER.debug("Requesting data from '%s'", url)
+
+        try:
+            async with asyncio.timeout(WEBSESSION_TIMEOUT):
+                response = await self.websession.get(
+                    url, headers=INITIAL_REQUEST_HEADERS
+                )
+
+                """result_json = await response.json()"""
+                result_text = await response.text()
+
+                """if response.status == HTTPStatus.OK:
+                    return result_text"""
+
+                _LOGGER.debug("status=%s, response=%s", response.status, result_text)
+
+        except asyncio.TimeoutError:
+            _LOGGER.exception("Timed out getting data from %s", url)
+        except aiohttp.ClientError:
+            _LOGGER.exception("Error getting data from %s", url)
+
+        return None

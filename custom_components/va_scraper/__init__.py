@@ -59,7 +59,7 @@ async def async_setup_entry(
         month=entry.options[CONF_MONTH],
         year=entry.options[CONF_YEAR],
         days=entry.options[CONF_DAYS],
-        session=async_get_clientsession(hass),
+        hass=hass,
     )
     # https://developers.home-assistant.io/docs/integration_fetching_data#coordinated-single-api-poll-for-data-for-all-entities
     coordinator = VAScraperDataUpdateCoordinator(api, hass)
