@@ -2,10 +2,13 @@
 
 from datetime import timedelta
 from logging import Logger, getLogger
+from typing import Final
 
 LOGGER: Logger = getLogger(__package__)
 
 DOMAIN = "va_scraper"
+SERVICE_REFRESH: Final = "refresh_awards"
+
 DEFAULT_NAME = "Scraper VA"
 ATTRIBUTION = "DPK"
 MANUFACTURER = "DPK"

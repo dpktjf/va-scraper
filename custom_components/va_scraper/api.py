@@ -135,3 +135,7 @@ class VAScraperClient:
             raise VAScraperBadRequestError(
                 msg,
             ) from exception
+
+    async def async_update(self, *args: Any) -> None:
+        """Refresh data."""
+        _LOGGER.debug("async_update - name= %s", self._name)

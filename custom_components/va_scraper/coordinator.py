@@ -47,7 +47,7 @@ class VAScraperDataUpdateCoordinator(DataUpdateCoordinator):
         """Update data via library."""
         LOGGER.debug("wait for scraper lock...")
         try:
-            await asyncio_wait_for(self.lock.acquire(), timeout=10)
+            await asyncio_wait_for(self.lock.acquire(), timeout=30)
         except Exception:  # noqa: BLE001
             LOGGER.error("timed out waiting for scraper lock")
             return None

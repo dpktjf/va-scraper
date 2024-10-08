@@ -22,5 +22,11 @@
                 }
             }
         }
+    },
+    "services": {
+        "refresh_awards": {
+            "name": "Refresh awards",
+            "description": "Scrapes latest data."
+        }
     }
 }

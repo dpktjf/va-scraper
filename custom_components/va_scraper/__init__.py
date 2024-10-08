@@ -1,9 +1,4 @@
-"""
-Custom integration to integrate eto_irrigation with Home Assistant.
-
-For more details about this integration, please refer to
-https://github.com/dpktjf/eto-irrigation
-"""
+"""Custom integration to scrape VA award seat availability."""
 
 from __future__ import annotations
 
@@ -15,7 +10,9 @@ from homeassistant.const import (
     CONF_NAME,
     Platform,
 )
+from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.service import verify_domain_control
 
 from .api import VAScraperClient
 from .const import (
@@ -24,12 +21,14 @@ from .const import (
     CONF_MONTH,
     CONF_ORIGIN,
     CONF_YEAR,
+    DOMAIN,
+    SERVICE_REFRESH,
 )
 from .coordinator import VAScraperDataUpdateCoordinator
 from .data import VAScraperData
 
 if TYPE_CHECKING:
-    from homeassistant.core import HomeAssistant
+    from homeassistant.core import HomeAssistant, ServiceCall
 
     from .data import VAScraperConfigEntry
 
@@ -71,6 +70,8 @@ async def async_setup_entry(
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
+    """setup_service_functions(hass, api)"""
+
     return True
 
 
@@ -87,3 +88,15 @@ async def async_unload_entry(
 ) -> bool:
     """Handle removal of an entry."""
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+
+
+@callback
+def setup_service_functions(hass: HomeAssistant, api: VAScraperClient) -> None:
+    """Set up the service handlers."""
+
+    @verify_domain_control(hass, DOMAIN)
+    async def force_refresh(call: ServiceCall) -> None:
+        """Obtain the latest state data via the vendor's RESTful API."""
+        await api.async_update()
+
+    hass.services.async_register(DOMAIN, SERVICE_REFRESH, force_refresh)
