@@ -20,6 +20,8 @@ from custom_components.va_scraper.const import (
     ATTR_ECONOMY,
     ATTR_MSG,
     ATTR_PREMIUM,
+    ATTR_PTS,
+    ATTR_SAVER,
     ATTR_STATUS,
     ATTR_UPPER,
     ATTRIBUTION,
@@ -131,13 +133,21 @@ class VAScraperSensor(SensorEntity):
     @property
     def native_value(self) -> str:
         """Return the state of the device."""
+        return self.get_it(self._dd, self.entity_description.key, ATTR_PTS)
+
+    def get_it(self, dom: str, key: str, attr: str) -> str:
+        """Extract data from cordinator in a safe checking way."""
         if (
-            self._coordinator.data.get(self._dd) is None
-            or self._coordinator.data.get(self._dd).get(self.entity_description.key)  # type: ignore  # noqa: PGH003
+            self._coordinator.data.get(dom) is None
+            or self._coordinator.data.get(dom).get(key)  # type: ignore  # noqa: PGH003
             is None
         ):
             return STATE_UNAVAILABLE
-        return self._coordinator.data.get(self._dd).get(self.entity_description.key)  # type: ignore  # noqa: PGH003
+        return (
+            self._coordinator.data.get(dom)
+            .get(key)  # type: ignore  # noqa: PGH003
+            .get(attr)
+        )
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
@@ -147,9 +157,11 @@ class VAScraperSensor(SensorEntity):
             attributes[ATTR_CODE] = 1
             attributes[ATTR_MSG] = "Cannot connect to node-red service???"
         else:
-            attributes[ATTR_CODE] = self._coordinator.data.get(ATTR_STATUS).get(  # type: ignore  # noqa: PGH003
+            self._coordinator.data.get(ATTR_STATUS).get(  # type: ignore  # noqa: PGH003
                 ATTR_CODE
             )
             attributes[ATTR_MSG] = self._coordinator.data.get(ATTR_STATUS).get(ATTR_MSG)  # type: ignore  # noqa: PGH003
-
+            attributes[ATTR_SAVER] = self.get_it(
+                self._dd, self.entity_description.key, ATTR_SAVER
+            )
         return attributes
